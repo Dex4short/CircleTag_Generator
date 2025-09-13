@@ -14,7 +14,7 @@ public abstract class Generator {
 	private CircleTag circleTag;
 	private ArrayList<CircleTag> savedStates;
 	private CircleMark mark;
-	private int d, o, s, direction, orbit, size, markerId, idDifference, leastIdDifference, lastIdAdjustment;
+	private int d, o, s, direction, orbit, size, markerId, idDifference, leastIdDifference;
 	private boolean hasDifference;
 	
 	public Generator() {
@@ -44,12 +44,12 @@ public abstract class Generator {
 	}
 	
 	protected boolean generateCircleTag(int id, int offset, int alt) {
-		int target_id = (id - (((offset)/2) * alt));
-		
 		clearCircleMarks();
 		clearSavedStates();
 		
+		int target_id = (id - (((offset)/2) * alt));
 		int maxSize, minOrbit=1, added=-1, minDifference=Integer.MAX_VALUE;
+		
 		while(minOrbit < 5) {
 			maxSize=7;
 			
@@ -65,7 +65,7 @@ public abstract class Generator {
 					}
 					else{
 						if(markerId != target_id) {
-							//System.out.print("for(" + target_id + " w/ " + id +") ");
+							Debug.println("for(" + target_id + " w/ " + id +") ");
 							minOrbit = 4;
 							break;
 						}
@@ -92,18 +92,13 @@ public abstract class Generator {
 			Debug.println("\t\tminOrbit: " + minOrbit);
 		}
 		
-		//reorderSavedStates();
 		for(int i=savedStates.size()-1; i>=0; i--) {
 			if(adjustCircleMarks(savedStates.get(i), target_id)) return true;
 		}
 		
-		//System.out.print(" [" + markerId + "] ");
-		if(offset == 10) {
-			//System.out.print(" no solution..."+ markerId + "  ");
-			return false;
-		}
+		if(isNoSolutionAt(offset)) return false;
 
-		//System.out.print(" recursing: " + offset + " ");
+		Debug.print(" recursing(offset: " + offset + ") ");
 		return generateCircleTag(id-(alt*offset), offset+1, alt*-1);
 	}
 	
@@ -116,6 +111,14 @@ public abstract class Generator {
 	
 	protected void clearSavedStates() {
 		savedStates.clear();
+	}
+	
+	protected boolean isNoSolutionAt(int offset) {
+		if(offset == 10) {
+			Debug.print(" no solution...");
+			return true;
+		}
+		return false;
 	}
 	
 	protected int addHollows(int targetId, int maxSizeLimit, int minOrbitLimit) {
@@ -214,26 +217,6 @@ public abstract class Generator {
 		
 		savedStates.add(newSavedState);
 	}
-	
-	public void reorderSavedStates() {
-		ArrayList<CircleTag> zigzagOrder = new ArrayList<CircleTag>();
-    	
-    	int 
-    	i,
-    	length = savedStates.size(),
-    	index = length/2,
-    	direction = 1;
-    	
-    	for(i=0; i<length; i++){
-    		index += i * direction;
-    		
-    		zigzagOrder.add(savedStates.get(index));
-    		
-    		direction *= -1;
-    	}
-    	
-    	savedStates = zigzagOrder;
-    }
 	
 	protected boolean adjustCircleMarks(CircleTag savedState, int id) {
 		Debug.println("adjust();");
