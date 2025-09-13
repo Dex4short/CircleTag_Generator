@@ -4,38 +4,46 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import marker.CircleTag;
 import oop.Generator;
 
 public abstract class GenerationPanel extends JPanel{
 	private static final long serialVersionUID = 7904869368096164666L;
-	private final CircleTag circle_tag;
 	private final Generator generator;
+	private final CircleTag circleTag;
 	private Graphics2D g2d;
 	
-	public GenerationPanel() {
-		circle_tag = new CircleTag();
-		circle_tag.setMarkerBodyVisible(true);
-		circle_tag.setOrbitsVisible(true);
-		
-		generator = new Generator(circle_tag) {
+	public GenerationPanel(int initialId) {
+		generator = new Generator() {
 			@Override
-			public void onIdGenerated() {
-				getRootPane().repaint();
+			public void onIdGenerated(CircleTag circleTag) {
+				if(getRootPane() != null) getRootPane().repaint();
 			}
 		};
+		
+		circleTag = generator.getCircleTag();
+		circleTag.setMarkerBodyVisible(true);
+		circleTag.setOrbitsVisible(true);
+		circleTag.setScale(2);
+		
+		SwingUtilities.invokeLater(() -> {
+			generator.generateCircleTag(initialId);
+		});
 	}
+	
 	@Override
 	public void paint(Graphics g) {
 		g2d = (Graphics2D)g;
 		
-		circle_tag.draw(g2d, (getWidth()/2) - (circle_tag.getTagSize()/2), (getHeight()/2) - (circle_tag.getTagSize()/2));
-		
+		circleTag.draw(g2d, (getWidth()/2) - (circleTag.getTagSize()/2), (getHeight()/2) - (circleTag.getTagSize()/2));
 	}
+	
 	public CircleTag getCircleTag() {
-		return circle_tag;
+		return circleTag;
 	}
+	
 	public Generator getGenerator() {
 		return generator;
 	}

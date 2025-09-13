@@ -16,7 +16,7 @@ public abstract class InputPanel extends JPanel{
 	private final JTextField txt_field;
 	private final JButton btn;
 	
-	public InputPanel() {
+	public InputPanel(int initialId) {
 		setLayout(new FlowLayout(FlowLayout.CENTER));
 		
 		txt_field = new JTextField(10);
@@ -26,6 +26,7 @@ public abstract class InputPanel extends JPanel{
 				BorderFactory.createLineBorder(Color.gray),
 				BorderFactory.createEmptyBorder(4, 5, 4, 5)
 		));
+		txt_field.setText(String.valueOf(initialId));
 		
 		btn.addActionListener(new ActionListener() {
 			@Override
