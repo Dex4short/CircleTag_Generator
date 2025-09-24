@@ -3,13 +3,14 @@ package system;
 import system.ui.CircleTagGeneratorWindow;
 
 public class CircleTagGenerator {
+	public static CircleTagGeneratorWindow window = new CircleTagGeneratorWindow(3888);
 
 	public static void main(String[]args) {
-		CircleTagGeneratorWindow generator = new CircleTagGeneratorWindow(3888);
-		generator.setSize(400,400);
-		generator.setLocationRelativeTo(null);
-		generator.setDefaultCloseOperation(CircleTagGeneratorWindow.EXIT_ON_CLOSE);
-		generator.setVisible(true);
+		window.setSize(400,400);
+		window.setLocationRelativeTo(null);
+		window.setDefaultCloseOperation(CircleTagGeneratorWindow.EXIT_ON_CLOSE);
+		window.setVisible(true);
+		
 	}
 	
 }

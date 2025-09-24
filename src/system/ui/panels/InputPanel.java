@@ -32,7 +32,7 @@ public abstract class InputPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					generateCircleTag(Integer.parseInt(txt_field.getText()));
+					onInputID(Integer.parseInt(txt_field.getText()));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					Toolkit.getDefaultToolkit().beep();
@@ -45,6 +45,12 @@ public abstract class InputPanel extends JPanel{
 		
 	}
 	
-	public abstract void generateCircleTag(int id);
+	public abstract void onInputID(int id);
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		txt_field.setEditable(enabled);
+		btn.setEnabled(enabled);
+	}
+	
 }

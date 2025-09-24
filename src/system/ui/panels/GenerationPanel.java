@@ -7,18 +7,20 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import marker.CircleTag;
-import oop.Generator;
+import marker.CircleTagGenerator;
 
 public abstract class GenerationPanel extends JPanel{
 	private static final long serialVersionUID = 7904869368096164666L;
-	private final Generator generator;
+	private final CircleTagGenerator generator;
 	private final CircleTag circleTag;
 	private Graphics2D g2d;
 	
 	public GenerationPanel(int initialId) {
-		generator = new Generator() {
+		generator = new CircleTagGenerator() {
 			@Override
 			public void onIdGenerated(CircleTag circleTag) {
+				onCircleTagGenerated(circleTag);
+				
 				if(getRootPane() != null) getRootPane().repaint();
 			}
 		};
@@ -33,6 +35,8 @@ public abstract class GenerationPanel extends JPanel{
 		});
 	}
 	
+	public abstract void onCircleTagGenerated(CircleTag circleTag);
+	
 	@Override
 	public void paint(Graphics g) {
 		g2d = (Graphics2D)g;
@@ -40,12 +44,14 @@ public abstract class GenerationPanel extends JPanel{
 		circleTag.draw(g2d, (getWidth()/2) - (circleTag.getTagSize()/2), (getHeight()/2) - (circleTag.getTagSize()/2));
 	}
 	
-	public CircleTag getCircleTag() {
-		return circleTag;
+	public void generateCircleTag(int id) {
+		new Thread( () -> {
+			generator.generateCircleTag(id);
+		}).start();
 	}
 	
-	public Generator getGenerator() {
-		return generator;
+	public CircleTag getCircleTag() {
+		return circleTag;
 	}
 	
 }
